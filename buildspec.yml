@@ -2,15 +2,20 @@ version: 0.2
 phases:
   install:
     runtime-versions:
-      dotnet: 2.2
+      docker: 18
   pre_build:
     commands:
-      - echo Restore started on `date`
-      - dotnet restore WebAppForCICD/WebAppForCICD.csproj
+      - echo Logging in to Amazon ECR...
+      - $(aws ecr get-login --no-include-email --region ap-south-1)
   build:
     commands:
       - echo Build started on `date`
-      - dotnet publish -c release -o ./build_output WebAppForCICD/WebAppForCICD.csproj
-artifacts:
-  files:
-    - CodeBuild-awsdotnet/build_output/**/*
+      - echo Building the Docker image
+      - docker build -t awsdotnet Dockerfile
+      - docker tag awsdotnet:latest 663265013238.dkr.ecr.ap-south-1.amazonaws.com/awsdotnet:$IMAGE_TAG
+  post_build:
+    commands:
+      - echo Build completed on `date`
+      - echo Pushing the Docker image...
+      - docker push 663265013238.dkr.ecr.ap-south-1.amazonaws.com/awsdotnet:$IMAGE_TAG
+
