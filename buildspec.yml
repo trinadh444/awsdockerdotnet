@@ -12,10 +12,10 @@ phases:
       - echo Build started on `date`
       - echo Building the Docker image
       - docker build -t awsdotnet .
-      - docker tag awsdotnet:latest 663265013238.dkr.ecr.ap-south-1.amazonaws.com/awsdotnet:$IMAGE_TAG
+      - docker tag awsdotnet:latest 663265013238.dkr.ecr.ap-south-1.amazonaws.com/awsdotnet:latest
   post_build:
     commands:
       - echo Build completed on `date`
       - echo Pushing the Docker image...
-      - docker push 663265013238.dkr.ecr.ap-south-1.amazonaws.com/awsdotnet:$IMAGE_TAG
+      - docker push 663265013238.dkr.ecr.ap-south-1.amazonaws.com/awsdotnet:latest
 
